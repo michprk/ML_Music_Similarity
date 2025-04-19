@@ -22,11 +22,12 @@ X, y_true, file_names = load_dataset(feature_root, feature_type)
 
 model = ClusterModel(n_clusters = 10, cluster_type = cluster_choice)
 model.fit(X)
-plot_clusters(model.X_pca, model.clusters)
+plot_clusters(model.X_pca_vis, model.clusters)
 
-mel_db = extract_feature(test_audio, feature_type)
-mel_flat = flatten_feature(mel_db, fixed_lengths)
-input_scaled, input_pca  = model.transform_input([mel_flat])
+feat_db = extract_feature(test_audio, feature_type)
+feat_flat = flatten_feature(feat_db, fixed_lengths)
+
+input_scaled, input_pca  = model.transform_input([feat_flat])
 input_cluster = model.predict_cluster(input_scaled)
 
 recommender = Recommender(model.X_scaled, file_names, model.clusters)
