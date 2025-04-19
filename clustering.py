@@ -20,4 +20,5 @@ class ClusterModel:
         x_scaled = self.scaler.transform(x_new)
         x_pca = self.pca.transform(x_scaled)
         return x_scaled, x_pca
+    
 

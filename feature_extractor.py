@@ -2,14 +2,19 @@ import librosa
 import numpy as np
 from config import *
 
-def extract_mel(audio_path):
+def extract_feature(audio_path, feature_type = 'mel'):
     y, sr = librosa.load(audio_path, sr = SR)
-    mel = librosa.feature.melspectrogram(y = y, sr = sr, n_fft = N_FFT, hop_length = HOP_LENGTH, n_mels = N_MELS)
-    mel_db = librosa.power_to_db(mel)
-    return mel_db
+    if feature_type == 'mel':
+        feature = librosa.feature.melspectrogram(y = y, sr = sr, n_fft = N_FFT, hop_length = HOP_LENGTH, n_mels = N_MELS)
+        feature_db = librosa.power_to_db(feature)
 
-def flatten_mel(mel_db, fixed_length = FIXED_LEN):
-    mel_flat = mel_db.flatten()
-    if len(mel_flat) >= fixed_length:
-        return mel_flat[:fixed_length]
-    return np.pad(mel_flat, (0, fixed_length - len(mel_flat)))
+    elif feature_type == 'chroma':
+        feature_db = librosa.feature.chroma_cqt(y = y, sr = sr, hop_length = HOP_LENGTH)
+
+    return feature_db
+
+def flatten_feature(feat, fixed_length):
+    feat_flat = feat.flatten()
+    if len(feat_flat) >= fixed_length:
+        return feat_flat[:fixed_length]
+    return np.pad(feat_flat, (0, fixed_length - len(feat_flat)))
