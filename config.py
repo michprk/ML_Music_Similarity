@@ -6,5 +6,9 @@ FIXED_LEN = {
     "mel": 129 * 1293,
     "chroma": 12 * 1293
 }
+CLUSTER_TYPE = {
+    "kmeans": "kmeans",
+    "spectral": "spectral"
+}
 
 

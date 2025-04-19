@@ -6,8 +6,9 @@ from visualize import plot_clusters
 from config import *
 import os
 
-feature_type = 'chroma'
+feature_type = 'mel'
 fixed_lengths = FIXED_LEN[feature_type]
+cluster_choice = CLUSTER_TYPE['spectral']
 
 root_base_path = '/home/sangheon/Desktop/GTZAN_Data/Data'
 feature_root = os.path.join(root_base_path, {
@@ -19,7 +20,7 @@ test_audio = '/home/sangheon/Desktop/ML_Music_Similarity/test_data/Last Dinosaur
 
 X, y_true, file_names = load_dataset(feature_root, feature_type)
 
-model = ClusterModel(n_clusters = 10)
+model = ClusterModel(n_clusters = 10, cluster_type = cluster_choice)
 model.fit(X)
 plot_clusters(model.X_pca, model.clusters)
 
