@@ -28,10 +28,15 @@ if feature_type == 'concatenated':
 else:
     X, y_true, file_names = load_dataset(feature_root, feature_type)
 
-print(X.shape)
 model = ClusterModel(n_clusters = 10, cluster_type = cluster_choice)
 model.fit(X)
-plot_clusters(model.X_pca_vis, model.clusters)
+plot_clusters(
+    model.X_pca_vis,
+    model.clusters,
+    centroids=model.pca_for_vis.transform(model.kmeans_fallback.cluster_centers_),
+    save_path='cluster_plot.png',
+    show=True
+)
 
 feat_db = extract_feature(test_audio, feature_type)
 feat_flat = flatten_feature(feat_db, fixed_lengths)
