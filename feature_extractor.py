@@ -10,6 +10,17 @@ def extract_feature(audio_path, feature_type = 'mel'):
 
     elif feature_type == 'chroma':
         feature_db = librosa.feature.chroma_cqt(y = y, sr = sr, hop_length = HOP_LENGTH)
+
+    elif feature_type == 'concatenated':
+        mel = librosa.feature.melspectrogram(y = y, sr = sr, n_fft = N_FFT, hop_length = HOP_LENGTH, n_mels = N_MELS)
+        chroma = librosa.feature.chroma_cqt(y = y, sr = sr, hop_length = HOP_LENGTH)
+        mel_db = librosa.power_to_db(mel)
+
+        T = min(mel_db.shape[1], chroma.shape[1])
+        mel_db = mel_db[:, :T]
+        chroma = chroma[:, :T]
+        feature_db = np.concatenate((mel_db, chroma), axis = 0)
+
     return feature_db
 
 def flatten_feature(feat, fixed_length):

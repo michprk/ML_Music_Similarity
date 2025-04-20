@@ -3,7 +3,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
 class ClusterModel:
-    def __init__(self, n_clusters = 10, cluster_type = "kmeans", pca_enabled = True, pca_dim = 2):
+    def __init__(self, n_clusters = 10, cluster_type = "kmeans", pca_enabled = True, pca_dim = 5):
         self.scaler = StandardScaler()
         self.cluster_type = cluster_type
         self.kmeans_fallback = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
@@ -26,7 +26,7 @@ class ClusterModel:
         else:
             self.X_reduced = self.X_scaled
 
-        self.clusters = self.clusterer.fit_predict(self.X_scaled)
+        self.clusters = self.clusterer.fit_predict(self.X_reduced)
 
         if self.cluster_type == "spectral":
             self.kmeans_fallback.fit(self.X_reduced)
@@ -34,6 +34,7 @@ class ClusterModel:
         self.X_pca_vis = self.pca_for_vis.fit_transform(self.X_reduced)
 
     def predict_cluster(self, x_new):
+        #print(f'X_new shape ={x_new.shape}')
         x_scaled = self.scaler.transform(x_new)
         x_reduced = self.pca.transform(x_scaled) if self.pca_enabled else x_scaled
         return self.kmeans_fallback.predict(x_reduced)[0]
