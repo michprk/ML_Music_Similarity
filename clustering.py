@@ -11,7 +11,7 @@ class ClusterModel:
         self.pca_enabled = pca_enabled
         self.pca_dim = pca_dim
         self.pca = PCA(n_components = pca_dim) if pca_enabled else None
-        self.pca_for_vis = PCA(n_components=2)
+        self.pca_for_vis = PCA(n_components = 5)
 
         if cluster_type == "kmeans":
             self.clusterer = self.kmeans_fallback

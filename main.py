@@ -8,7 +8,7 @@ import os
 
 feature_type = 'concatenated'
 fixed_lengths = FIXED_LEN[feature_type]
-cluster_choice = CLUSTER_TYPE['kmeans']
+cluster_choice = CLUSTER_TYPE['spectral']
 
 root_base_path = '/home/sangheon/Desktop/GTZAN_Data/Data'
 
@@ -30,11 +30,12 @@ else:
 
 model = ClusterModel(n_clusters = 10, cluster_type = cluster_choice)
 model.fit(X)
+
 plot_clusters(
     model.X_pca_vis,
     model.clusters,
     centroids=model.pca_for_vis.transform(model.kmeans_fallback.cluster_centers_),
-    save_path='cluster_plot.png',
+    save_path = '/home/sangheon/Desktop/ML_Music_Similarity/plot/concatenated_spectral.png',
     show=True
 )
 
