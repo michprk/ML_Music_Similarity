@@ -2,13 +2,13 @@ from data_loader import load_dataset, load_combined_dataset
 from clustering import ClusterModel
 from recommender import Recommender
 from feature_extractor import extract_feature, flatten_feature
-from visualize import plot_clusters
+from visualize import plot_clusters, plot_by_genre
 from config import *
 import os
 
-feature_type = 'concatenated'
+feature_type = 'chroma'  # 'mel', 'chroma', or 'concatenated'
 fixed_lengths = FIXED_LEN[feature_type]
-cluster_choice = CLUSTER_TYPE['spectral']
+cluster_choice = CLUSTER_TYPE['kmeans']
 
 root_base_path = '/home/sangheon/Desktop/GTZAN_Data/Data'
 
@@ -21,7 +21,7 @@ else:
         'chroma': 'Chromagram'
     }[feature_type])
 
-test_audio = '/home/sangheon/Desktop/ML_Music_Similarity/test_data/Last Dinosaurs - Sense.wav'
+test_audio = '/home/sangheon/Desktop/ML_Music_Similarity/test_data/dont.wav'
 
 if feature_type == 'concatenated':
     X, y_true, file_names = load_combined_dataset(mel_root, chroma_root)
@@ -35,18 +35,24 @@ plot_clusters(
     model.X_pca_vis,
     model.clusters,
     centroids=model.pca_for_vis.transform(model.kmeans_fallback.cluster_centers_),
-    save_path = '/home/sangheon/Desktop/ML_Music_Similarity/plot/concatenated_spectral.png',
+    save_path = '/home/sangheon/Desktop/ML_Music_Similarity/plot/chroma_spectral.png',
     show=True
+)
+
+plot_by_genre(
+    model.X_pca_vis,
+    y_true,
+    save_path="/home/sangheon/Desktop/ML_Music_Similarity/plot/chroma_spectral_origin.png"
 )
 
 feat_db = extract_feature(test_audio, feature_type)
 feat_flat = flatten_feature(feat_db, fixed_lengths)
 
-input_scaled, input_pca  = model.transform_input([feat_flat])
+input_reduced, input_pca = model.transform_input([feat_flat])
 input_cluster = model.predict_cluster([feat_flat])
 
 recommender = Recommender(model.X_reduced, file_names, model.clusters)
-recommendations = recommender.recommend(input_scaled, input_cluster, top_k=5)
+recommendations = recommender.recommend(input_reduced, input_cluster, top_k=5)
 
 print("\n Top-5 Recommended Songs:")
 for fname, score in recommendations:

@@ -28,6 +28,3 @@ def flatten_feature(feat, fixed_length):
     if len(feat_flat) >= fixed_length:
         return feat_flat[:fixed_length]
     return np.pad(feat_flat, (0, fixed_length - len(feat_flat)))
-
-
-

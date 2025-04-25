@@ -11,13 +11,13 @@ class ClusterModel:
         self.pca_enabled = pca_enabled
         self.pca_dim = pca_dim
         self.pca = PCA(n_components = pca_dim) if pca_enabled else None
-        self.pca_for_vis = PCA(n_components = 5)
+        self.pca_for_vis = PCA(n_components = 3)
 
         if cluster_type == "kmeans":
             self.clusterer = self.kmeans_fallback
 
         elif cluster_type == "spectral":
-            self.clusterer = SpectralClustering(n_clusters = n_clusters, random_state = 42, affinity='nearest_neighbors')
+            self.clusterer = SpectralClustering(n_clusters = n_clusters, random_state = 42, affinity='nearest_neighbors', n_neighbors= 5)
 
     def fit(self, X):
         self.X_scaled = self.scaler.fit_transform(X)
@@ -34,7 +34,6 @@ class ClusterModel:
         self.X_pca_vis = self.pca_for_vis.fit_transform(self.X_reduced)
 
     def predict_cluster(self, x_new):
-        #print(f'X_new shape ={x_new.shape}')
         x_scaled = self.scaler.transform(x_new)
         x_reduced = self.pca.transform(x_scaled) if self.pca_enabled else x_scaled
         return self.kmeans_fallback.predict(x_reduced)[0]
