@@ -36,6 +36,32 @@ def plot_clusters(X_pca, clusters, centroids=None, new_point=None, new_point_lab
     plt.close()
 
 
+
+def plot_spectral(X_pca, clusters, centroids=None, new_point=None, new_point_label="Input", save_path="clusters.png", show=False):
+
+    plt.figure(figsize=(10, 7))
+    scatter = plt.scatter(X_pca[:, 0], X_pca[:, 1], c=clusters, cmap='tab10', alpha=0.6, edgecolors='w', linewidths=0.5)
+    plt.colorbar(scatter, label="Cluster ID")
+    plt.xlabel("Principal Component 1")
+    plt.ylabel("Principal Component 2")
+    plt.title("Clustering Result (PCA-Reduced)")
+    plt.grid(True)
+
+    if centroids is not None:
+        centroids = np.array(centroids)
+        plt.scatter(centroids[:, 0], centroids[:, 1], c='black', s=100, marker='X', label='Centroids')
+
+    if new_point is not None:
+        plt.scatter(new_point[0, 0], new_point[0, 1], c='red', s=120, edgecolors='black', label=new_point_label, marker='*')
+
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(save_path)
+
+    if show:
+        plt.show()
+    plt.close()
+
 def plot_by_genre(X_pca, y_true, save_path="pca_by_genre.png", show=False):
     """
     Plot PCA-reduced data colored by ground-truth genre labels.
