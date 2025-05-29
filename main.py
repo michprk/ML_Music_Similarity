@@ -7,8 +7,8 @@ from config import *
 import os
 import gc
 
-feature_type = 'concatenated'  # 'mel', 'chroma', or 'concatenated'
-cluster_choice = CLUSTER_TYPE['kmeans'] # 'kmeans' or 'spectral
+feature_type = 'concatenated'  # mel, chroma, or concatenated
+cluster_choice = CLUSTER_TYPE['kmeans'] # kmeans or spectral
 fixed_lengths = FIXED_LEN[feature_type]
 
 root_base_path = '/home/sangheon/Desktop/GTZAN_Data/Data'
